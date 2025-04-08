@@ -1,0 +1,46 @@
+{
+  "operatingSystems": [
+    "Windows 11",
+    "Windows 10",
+    "Windows 8",
+    "Windows 7",
+    "macOS Sonoma",
+    "macOS Ventura",
+    "macOS Monterey",
+    "macOS Big Sur",
+    "Ubuntu",
+    "Debian",
+    "Fedora",
+    "Arch Linux",
+    "Other"
+  ],
+  "browsers": [
+    "Google Chrome",
+    "Mozilla Firefox",
+    "Microsoft Edge",
+    "Safari",
+    "Brave",
+    "Opera",
+    "Vivaldi",
+    "Other"
+  ],
+  "deviceTypes": ["Desktop", "Laptop", "Tablet", "Mobile"],
+  "screenResolutions": [
+    "1920x1080",
+    "1366x768",
+    "1440x900",
+    "1536x864",
+    "1600x900",
+    "1680x1050",
+    "2560x1440",
+    "3840x2160",
+    "Other"
+  ],
+  "userAgents": [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/109.0",
+    "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/537.36 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/537.36",
+    "Other"
+  ]
+}

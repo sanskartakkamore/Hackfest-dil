@@ -5,7 +5,9 @@ import { ConfigModule } from './config/config.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/feedback-db'),
+    MongooseModule.forRoot(
+      'mongodb+srv://admin:admin@dili-hackfest.no62crh.mongodb.net/UserFormData',
+    ),
     FeedbackModule,
     ConfigModule,
   ],

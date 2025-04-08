@@ -3,6 +3,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { FeedbackService } from './feedback.service';
 import { FeedbackController } from './feedback.controller';
 import { Feedback, FeedbackSchema } from './schemas/feedback.schema';
+import { JiraService } from 'src/utils/jira.service';
 
 @Module({
   imports: [
@@ -11,6 +12,6 @@ import { Feedback, FeedbackSchema } from './schemas/feedback.schema';
     ]),
   ],
   controllers: [FeedbackController],
-  providers: [FeedbackService],
+  providers: [FeedbackService, JiraService],
 })
 export class FeedbackModule {}

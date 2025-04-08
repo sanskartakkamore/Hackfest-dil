@@ -39,25 +39,12 @@ import { Textarea } from "@repo/ui/components/textarea";
 import { submitFeedback } from "./actions";
 import data from "./data.json";
 
-// import Filter from "bad-words";
-// import { z } from "zod";
-
-import Filter from "bad-words";
-
-const filter = new Filter();
-
-// Add custom bad words if needed
-filter.addWords("customword1", "customword2");
-filter.removeWords("hell"); // Optional: Allow words if necessary
 
 export const formSchema = z
   .object({
     name: z
       .string()
-      .min(2, { message: "Name must be at least 2 characters." })
-      .refine((val) => !filter.isProfane(val), {
-        message: "Inappropriate words are not allowed.",
-      }),
+      .min(2, { message: "Name must be at least 2 characters." }),
 
     email: z.string().email({ message: "Please enter a valid email address." }),
 
@@ -65,102 +52,69 @@ export const formSchema = z
 
     type: z.enum(["bug", "suggestion", "feature", "other"], {
       required_error: "Please select a feedback type.",
-    }),
+    }).default("suggestion"),
 
     message: z
       .string()
-      .min(10, { message: "Feedback must be at least 10 characters." })
-      .refine((val) => !filter.isProfane(val), {
-        message: "Inappropriate words are not allowed.",
-      }),
+      .min(10, { message: "Feedback must be at least 10 characters." }),
 
     stepsToReproduce: z.array(z.string()).optional(),
 
-    severity: z.enum(["low", "medium", "high", "critical"]).optional(),
+    severity: z.string().optional(),
 
     deviceInfo: z
       .object({
-        os: z.string().min(1, { message: "Operating system is required." }),
-        browser: z.string().min(1, { message: "Browser is required." }),
-        deviceType: z.enum(["desktop", "laptop", "tablet", "mobile"]),
+        os: z.string().optional(),
+        browser: z.string().optional(),
+        deviceType: z.string().optional(),
         screenResolution: z
-          .string()
-          .min(1, { message: "Screen resolution is required." }),
-        userAgent: z.string().min(1, { message: "User agent is required." }),
+          .string().optional(),
+        userAgent: z.string().optional(),
       })
       .optional(),
 
     featureDescription: z
       .string()
-      .optional()
-      .refine((val) => !val || !filter.isProfane(val), {
-        message: "Inappropriate words are not allowed.",
-      }),
+      .optional(),
 
     useCase: z
       .string()
-      .optional()
-      .refine((val) => !val || !filter.isProfane(val), {
-        message: "Inappropriate words are not allowed.",
-      }),
+      .optional(),
 
     benefits: z
       .string()
-      .optional()
-      .refine((val) => !val || !filter.isProfane(val), {
-        message: "Inappropriate words are not allowed.",
-      }),
+      .optional(),
 
-    priority: z.enum(["low", "medium", "high", "critical"]).optional(),
+    priority: z.string().optional(),
 
     similarFeature: z
       .string()
-      .optional()
-      .refine((val) => !val || !filter.isProfane(val), {
-        message: "Inappropriate words are not allowed.",
-      }),
+      .optional(),
 
     suggestionDescription: z
       .string()
-      .optional()
-      .refine((val) => !val || !filter.isProfane(val), {
-        message: "Inappropriate words are not allowed.",
-      }),
+      .optional(),
 
     rationale: z
       .string()
-      .optional()
-      .refine((val) => !val || !filter.isProfane(val), {
-        message: "Inappropriate words are not allowed.",
-      }),
+      .optional(),
 
     potentialImpact: z
       .string()
-      .optional()
-      .refine((val) => !val || !filter.isProfane(val), {
-        message: "Inappropriate words are not allowed.",
-      }),
+      .optional(),
 
     relatedIdea: z
       .string()
-      .optional()
-      .refine((val) => !val || !filter.isProfane(val), {
-        message: "Inappropriate words are not allowed.",
-      }),
+      .optional(),
 
     suggestionType: z
-      .enum([
-        "user_experience_improvement",
-        "performance_optimization",
-        "new_feature_idea",
-        "content_suggestion",
-        "others",
-      ])
+      .string()
       .optional(),
   })
   .refine(
     (data) => {
       if (data.type === "bug") {
+        // Bug-related fields validation
         return (
           !!data.severity &&
           !!data.stepsToReproduce?.length &&
@@ -171,8 +125,10 @@ export const formSchema = z
           !!data.deviceInfo?.userAgent
         );
       } else if (data.type === "feature") {
+        // Feature-related fields validation
         return !!data.featureDescription && !!data.useCase && !!data.benefits;
       } else if (data.type === "suggestion") {
+        // Suggestion-related fields validation
         return (
           !!data.suggestionDescription &&
           !!data.rationale &&
@@ -181,7 +137,6 @@ export const formSchema = z
       }
       return true;
     },
-
     { message: "All bug-related fields are required." }
   );
 
@@ -207,24 +162,24 @@ export default function FeedbackForm() {
       type: "suggestion",
       message: "",
       stepsToReproduce: [],
-      severity: undefined,
+      severity: "",
       deviceInfo: {
         os: "",
         browser: "",
-        deviceType: "desktop",
+        deviceType: "",
         screenResolution: "",
         userAgent: "",
       },
       featureDescription: "",
       useCase: "",
       benefits: "",
-      priority: undefined,
+      priority: "low",
       similarFeature: "",
       suggestionDescription: "",
       rationale: "",
       potentialImpact: "",
       relatedIdea: "",
-      suggestionType: undefined,
+      suggestionType: "",
     },
   });
 
@@ -238,6 +193,7 @@ export default function FeedbackForm() {
   async function onSubmit(data: FormValues) {
     setIsSubmitting(true);
     try {
+      console.log("Form data:", data);
       await submitFeedback(data);
       setIsSuccess(true);
       toast.success("Feedback submitted", {
